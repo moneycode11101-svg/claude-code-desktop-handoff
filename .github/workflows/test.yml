@@ -1,0 +1,23 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install linters
+        run: brew install shellcheck shfmt
+      - name: Lint
+        run: |
+          shellcheck skills/desktop-handoff/scripts/*.sh tests/*.sh
+          shfmt -d skills tests
+      - name: Test
+        run: sh tests/new-session.test.sh
